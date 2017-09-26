@@ -2,21 +2,26 @@ import AptReporter from '../lib/apt-reporter';
 import assert from 'assert';
 import sinon from 'sinon';
 
-const baseReporter = {
-    symbols: {
-        ok: '✓',
-        err: '✖',
-        dot: '․',
-        error: 'F'
-    },
-    color (type, str) {
-        return `\u001b[${COLORS[type]}m${str}\u001b[0m`
-    }
-}
-
-const reporter = new AptReporter(baseReporter);
+const reporter = new AptReporter();
 
 describe('The Apt Reporter', () => {
+    describe('initilization', () => {
+        it('should start with 0 total tests', () => {
+            assert.equal(reporter.totalTests, 0);
+        });
+
+        it('should start with 0 failures', () => {
+            assert.equal(reporter.failures, 0);
+        });
+    });
+
+    describe('test:start event', () => {
+        it('should increae total tests by 1', ( )=> {
+            reporter.emit('test:start');
+            assert.equal(reporter.totalTests, 1);
+        });
+    });
+
     describe('test:fail event', () => {
         it('should increase failures by 1', () => {
             reporter.emit('test:fail');
@@ -33,6 +38,11 @@ describe('The Apt Reporter', () => {
 
         afterEach(() => {
             consoleLogSpy.restore();
+        });
+
+        it('should log the correct number of total testcases to the console', () => {
+            reporter.emit('end');
+            assert(consoleLogSpy.calledWith('Total: 1'));
         });
 
         it('should log the correct number of failures to the console', () => {
