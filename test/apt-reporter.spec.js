@@ -80,8 +80,9 @@ describe('The Apt Reporter', () => {
             assert(consoleLogSpy.calledWith('Failures: 1'));
         });
 
-        it('should log the name of the failed test to the console', () => {
-            assert(consoleLogSpy.calledWith(TEST_FAILURE_PARSED.fullTitle));
+        it('should log the name and file of the failed test to the console', () => {
+            assert(consoleLogSpy.calledWith('Testcase: ' + TEST_FAILURE_PARSED.fullTitle));
+            assert(consoleLogSpy.calledWith('Spec File: ' + TEST_FAILURE_PARSED.file));
         });
     });
 });
