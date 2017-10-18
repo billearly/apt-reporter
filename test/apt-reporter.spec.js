@@ -4,10 +4,18 @@ import sinon from 'sinon';
 
 import { 
     TEST_FAILURE, TEST_FAILURE_PARSED,
-    STACK_TRACE, STACK_TRACE_CONDENSED 
+    STACK_TRACE, STACK_TRACE_CONDENSED,
+    STATEMENT_FAILURE,
+    COLORS
 } from './fixtures';
 
-const reporter = new AptReporter();
+const baseReporter = {
+    color (type, str) {
+        return `\u001b[${COLORS[type]}m${str}\u001b[0m`
+    }
+}
+
+const reporter = new AptReporter(baseReporter);
 
 describe('The Apt Reporter', () => {
     describe('initilization', () => {
@@ -69,7 +77,7 @@ describe('The Apt Reporter', () => {
         });
 
         it('should log the correct number of failures to the console', () => {
-            assert(consoleLogSpy.calledWith('Failures: 1'));
+            assert(consoleLogSpy.calledWith(STATEMENT_FAILURE));
         });
 
         it('should log the name and file of the failed test to the console', () => {
