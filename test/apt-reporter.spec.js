@@ -12,15 +12,11 @@ const reporter = new AptReporter();
 describe('The Apt Reporter', () => {
     describe('initilization', () => {
         it('should start with 0 total tests', () => {
-            assert.equal(reporter.totalTests, 0);
-        });
-
-        it('should start with 0 failures', () => {
-            assert.equal(reporter.failures, 0);
+            assert.equal(reporter.totalTestCases, 0);
         });
 
         it('should start with an empty failure list', () => {
-            assert.equal(reporter.failedTestList.length, 0);
+            assert.equal(reporter.failedTestCases.length, 0);
         });
     });
 
@@ -41,7 +37,7 @@ describe('The Apt Reporter', () => {
     describe('test:start event', () => {
         it('should increase total tests by 1', ( )=> {
             reporter.emit('test:start');
-            assert.equal(reporter.totalTests, 1);
+            assert.equal(reporter.totalTestCases, 1);
         });
     });
 
@@ -50,13 +46,9 @@ describe('The Apt Reporter', () => {
             reporter.emit('test:fail', TEST_FAILURE);
         });
 
-        it('should increase failures by 1', () => { 
-            assert.equal(reporter.failures, 1);
-        });
-
         it('should add the parsed failed test to the list', () => {
-            assert.equal(reporter.failedTestList.length, 1);
-            assert.deepStrictEqual(reporter.failedTestList[0], TEST_FAILURE_PARSED);
+            assert.equal(reporter.failedTestCases.length, 1);
+            assert.deepStrictEqual(reporter.failedTestCases[0], TEST_FAILURE_PARSED);
         });
     });
 
@@ -83,6 +75,10 @@ describe('The Apt Reporter', () => {
         it('should log the name and file of the failed test to the console', () => {
             assert(consoleLogSpy.calledWith('Testcase: ' + TEST_FAILURE_PARSED.fullTitle));
             assert(consoleLogSpy.calledWith('Spec File: ' + TEST_FAILURE_PARSED.file));
+        });
+
+        it('should log the condensed stack trace to the console', () => {
+            assert(consoleLogSpy.calledWith(STACK_TRACE_CONDENSED));
         });
     });
 });
